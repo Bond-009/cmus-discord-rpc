@@ -1,0 +1,8 @@
+[package]
+name = "cmus-discord-rpc"
+version = "0.1.0"
+authors = ["Bond_009 <bond.009@outlook.com>"]
+
+[dependencies]
+discord-rpc-client = "^0.2.3"
+regex = "^0.2.10"
