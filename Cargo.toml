@@ -1,8 +1,11 @@
 [package]
 name = "cmus-discord-rpc"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Bond_009 <bond.009@outlook.com>"]
+keywords = ["discord", "rpc", "cmus"]
+repository = "https://github.com/Bond-009/cmus-discord-rpc"
+
 
 [dependencies]
-discord-rpc-client = "^0.2.3"
-regex = "^0.2.10"
+discord-rpc-client = "0.3"
+regex = "1.1"
