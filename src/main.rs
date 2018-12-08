@@ -1,6 +1,3 @@
-extern crate discord_rpc_client;
-extern crate regex;
-
 use discord_rpc_client::Client;
 use discord_rpc_client::models::Activity;
 use regex::Regex;
@@ -44,7 +41,7 @@ fn main() {
         if status != Status::Stopped {
             let artist = get_value(&output, "tag artist");
             let title = get_value(&output, "tag title");
-            
+
             if artist.is_empty() || title.is_empty() {
                 // Capture filename
                 let file_r = Regex::new(r"(?m)^file .+/(?P<f>.+)\..+\n").unwrap();
