@@ -99,13 +99,8 @@ fn get_socket_path() -> String
 
 fn get_value<'t>(input: &'t str, key: &str) -> Option<&'t str> {
     let re = Regex::new(&format!("(?m)^{} (.+)$", key)).unwrap();
-    if let Some(c) = re.captures(input) {
-        if let Some(v) = c.get(1) {
-            return Some(v.as_str());
-        }
-    }
 
-    None
+    Some(re.captures(input)?.get(1)?.as_str())
 }
 
 fn get_status(input: &str) -> Result<Status, Error> {
