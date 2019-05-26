@@ -21,20 +21,19 @@ fn main() {
     drpc.start();
 
     loop {
-        match stream.write_all(b"status\n") {
-            Ok(_) => (),
-            Err(_) => {
-                drpc.clear_activity().expect("Failed clear presence");
-                stream = get_unix_stream(&socket_path);
-                continue;
-            }
+        if stream.write_all(b"status\n").is_err() {
+            drpc.clear_activity().expect("Failed to clear presence");
+            stream = get_unix_stream(&socket_path);
+            continue;
         }
+
         let mut reader = BufReader::new(&stream);
         let mut output = String::new();
+
         // Read until an empty line
         while reader.read_line(&mut output).unwrap() != 1 {};
 
-        let status = get_status(&get_value(&output, "status")).unwrap();
+        let status = get_status(get_value(&output, "status").unwrap()).unwrap();
 
         let mut ac = Activity::new()
                         .details(format!("{:?}", status));
@@ -42,22 +41,21 @@ fn main() {
             let artist = get_value(&output, "tag artist");
             let title = get_value(&output, "tag title");
 
-            if artist.is_empty() || title.is_empty() {
+            if artist.is_none() || title.is_none() {
                 // Capture filename
-                let file_r = Regex::new(r"(?m)^file .+/(?P<f>.+)\..+\n").unwrap();
-                let file = match file_r.captures(&output) {
-                    Some(v) => v["f"].to_owned(),
-                    None => "".to_owned()
-                };
-                ac = ac.state(file);
+                let file_r = Regex::new(r"(?m)^file .+/(.+)\..+\n").unwrap();
+                match file_r.captures(&output) {
+                    Some(v) => ac = ac.state(v.get(1).unwrap().as_str()),
+                    None => ac = ac.state("")
+                }
             }
             else {
-                ac = ac.state(artist + " - " + &title);
+                ac = ac.state(artist.unwrap().to_owned() + " - " + title.unwrap());
             }
 
             if status == Status::Playing {
-                let duration = get_value(&output, "duration").parse::<u64>().unwrap();
-                let position = get_value(&output, "position").parse::<u64>().unwrap();
+                let duration = get_value(&output, "duration").unwrap().parse::<u64>().unwrap();
+                let position = get_value(&output, "position").unwrap().parse::<u64>().unwrap();
                 let sce = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
                 ac = ac.timestamps(|t| t.end(sce + duration - position));
             }
@@ -71,43 +69,43 @@ fn main() {
 
 fn get_unix_stream(socket_path: &str) -> UnixStream {
     loop {
-        match UnixStream::connect(socket_path) {
-            Ok(s) => return s,
-            Err(_) => {
-                // Try again in 15 seconds
-                thread::sleep(Duration::from_secs(15));
-            }
+        if let Ok(s) = UnixStream::connect(socket_path) {
+            return s;
         }
+
+        // Try again in 15 seconds
+        thread::sleep(Duration::from_secs(15));
     }
 }
 
 /// Get the path to the cmus socket the same way as cmus itself
 fn get_socket_path() -> String
 {
-    match env::var("CMUS_SOCKET") {
-        Ok(v) => return v,
-        Err(_) => ()
-    };
+    if let Ok(v) = env::var("CMUS_SOCKET") {
+        return v;
+    }
 
-    match env::var("XDG_RUNTIME_DIR") {
-        Ok(v) => return v + "/cmus-socket",
-        Err(_) => ()
-    };
+    if let Ok(v) = env::var("XDG_RUNTIME_DIR") {
+        return v + "/cmus-socket";
+    }
 
     let cmus_config_dir = match env::var("XDG_CONFIG_HOME") {
         Ok(v) => v,
         Err(_) => env::var("HOME").unwrap() + "/.config"
     } + "/cmus";
  
-    return cmus_config_dir + "/socket"
+    cmus_config_dir + "/socket"
 }
 
-fn get_value(input: &str, key: &str) -> String {
-    let re = Regex::new(&format!("(?m)^{} (?P<v>.+)$", key)).unwrap();
-    match re.captures(input) {
-        Some(value) => value["v"].to_owned(),
-        None => "".to_owned()
+fn get_value<'t>(input: &'t str, key: &str) -> Option<&'t str> {
+    let re = Regex::new(&format!("(?m)^{} (.+)$", key)).unwrap();
+    if let Some(c) = re.captures(input) {
+        if let Some(v) = c.get(1) {
+            return Some(v.as_str());
+        }
     }
+
+    None
 }
 
 fn get_status(input: &str) -> Result<Status, Error> {

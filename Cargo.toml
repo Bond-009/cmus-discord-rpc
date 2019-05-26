@@ -6,6 +6,12 @@ keywords = ["discord", "rpc", "cmus"]
 repository = "https://github.com/Bond-009/cmus-discord-rpc"
 edition = "2018"
 
+[profile.release]
+debug = false
+lto = true
+opt-level = 3
+panic = "abort"
+
 [dependencies]
 discord-rpc-client = "0.3"
 regex = "1.1"
