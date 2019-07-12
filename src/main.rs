@@ -1,11 +1,18 @@
-use discord_rpc_client::Client;
-use discord_rpc_client::models::Activity;
-use regex::Regex;
+use std::{
+    env,
+    io::{BufRead, BufReader,Error, ErrorKind, Write},
+    os::unix::net::UnixStream,
+    time::{Duration, SystemTime, UNIX_EPOCH},
+    thread
+};
 
-use std::{env, thread};
-use std::io::{BufRead, BufReader,Error, ErrorKind, Write};
-use std::os::unix::net::UnixStream;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use discord_rpc_client::{
+    Client,
+    models::Activity
+};
+use env_logger;
+use log::{debug, info};
+use regex::Regex;
 
 #[derive(PartialEq, Debug)]
 enum Status {
@@ -15,10 +22,17 @@ enum Status {
 }
 
 fn main() {
+    env_logger::init();
+
+    info!("Starting cmus-discord-rpc...");
+
     let socket_path = get_socket_path();
+    debug!("Using cmus socket {}", socket_path);
     let mut stream = get_unix_stream(&socket_path);
     let mut drpc = Client::new(431179120836214795);
     drpc.start();
+
+    let mut output = String::new();
 
     loop {
         if stream.write_all(b"status\n").is_err() {
@@ -28,10 +42,11 @@ fn main() {
         }
 
         let mut reader = BufReader::new(&stream);
-        let mut output = String::new();
+        output.clear();
 
         // Read until an empty line
         while reader.read_line(&mut output).unwrap() != 1 {};
+        debug!("Received\n{}", output);
 
         let status = get_status(get_value(&output, "status").unwrap()).unwrap();
 
