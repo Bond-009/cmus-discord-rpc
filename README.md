@@ -6,7 +6,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 ## Installing
 
-- If it isn't already on your system, install Rust, `cargo`, and `git`. On \*nix based systems this should be as simple as installing it from your package manager. Otherwise follow the instructions [here](https://www.rust-lang.org/tools/install) to install Rust, and [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to install `git`.
+- If it isn't already on your system, install `rust`, `cargo`, and `git`. On \*nix based systems this should be as simple as installing it from your package manager.
 
 - Next, clone the git repository with `git clone https://github.com/Bond-009/cmus-discord-rpc`.
 
@@ -16,9 +16,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - `cargo` may warn that you need to add the installation directory to `PATH`. If you're not sure how to on your platform, check out [this handy guide](https://github.com/sindresorhus/guides/blob/master/set-environment-variables.md). `cargo` should tell you what directory to add to`PATH`.
 
-- Lastly, type `source ~/.bashrc` on a \*nix based system using bash, or if you're running Windows simply restart CMD.
-
-- If you set up your `PATH` correctly, simply type `cmus-discord-rpc` and it should run!
+- If you set up your `PATH` correctly, simply run `cmus-discord-rpc` and it should run!
 
 ## Building
 
