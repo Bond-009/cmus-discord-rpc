@@ -18,7 +18,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - Lastly, type `source ~/.bashrc` on a \*nix based system using bash, or if you're running Windows simply restart CMD.
 
-- If you set up your path correctly, simply type `cmus-discord-rpc` and it should run!
+- If you set up your `PATH` correctly, simply type `cmus-discord-rpc` and it should run!
 
 ## Building
 
