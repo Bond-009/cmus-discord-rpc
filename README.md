@@ -8,19 +8,43 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - If it isn't already on your system, install `rust`, and `cargo`. On \*nix based systems this should be as simple as installing it from your package manager.
 
-- Clone the repository.
+- Obtain the sources. You can either do this by cloning the repository using `git` or downloading an archive of the repository.
 
-- Change your directory into the cloned repository.
+      git clone https://github.com/Bond-009/cmus-discord-rpc
 
-- Run `cargo install --path .`. This will install it to a directory in your home/user folder.
+  or alternatively:
+
+       wget https://github.com/Bond-009/cmus-discord-rpc/archive/master.zip
+
+       unzip master.zip
+
+- Change your directory into where the sources were cloned/extracted to.
+
+      cd cmus-discord-rpc-master
+
+- Next, build and install it to your home directory.
+    
+      cargo install --path .
+
+- Once `cargo`'s installation directory is in your `PATH` (`cargo` should tell you where the end of the previous step) simply run `cmus-discord-rpc` and it should start!
 
 ## Building
 
-- Clone the repository.
+- Obtain the sources. You can either do this by cloning the repository or downloading an archive of the repository.
 
-- Run `cargo build`.
+- Change your directory into where the sources were cloned/extracted to.
 
-- You should see a directory called `target` be created. You can find your built binaries there.
+- Finally to build, use the following commands:
+  
+  For debugging:
+        
+      cargo build
+
+  For production use:
+      
+      cargo build --release
+
+- You should see a new directory called `target`. You can find subfolders for each of your build targets.
 
 ## License
 
@@ -35,7 +59,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+along with this program.  If not, see https://www.gnu.org/licenses/.
 
 [travis-ci-badge]: https://travis-ci.org/Bond-009/cmus-discord-rpc.svg?branch=master
 [travis-ci-page]: https://travis-ci.org/Bond-009/cmus-discord-rpc
