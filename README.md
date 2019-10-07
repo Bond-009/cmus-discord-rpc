@@ -8,7 +8,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - If it isn't already on your system, install `rust`, and `cargo`. On \*nix based systems this should be as simple as installing it from your package manager.
 
-- Clone the repository 
+- Clone the repository.
 
 - Change your directory into the cloned repository.
 
@@ -16,9 +16,9 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 ## Building
 
-- Clone the repository
+- Clone the repository.
 
-- Run `cargo build`
+- Run `cargo build`.
 
 - You should see a directory called `target` be created. You can find your built binaries there.
 
