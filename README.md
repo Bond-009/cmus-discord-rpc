@@ -26,7 +26,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - Change your directory into where the sources were cloned/extracted to.
 
-      cd cmus-discord-rpc-master
+      cd cmus-discord-rpc
 
 - Next, build and install it to your home directory.
     
