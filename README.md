@@ -50,7 +50,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
       
       cargo build --release
 
-- You should see a new directory called `target`. You can find subfolders for each of your build targets.
+- You should see a new directory called `target`. There you can find subfolders for each of your build targets.
 
 ## License
 
