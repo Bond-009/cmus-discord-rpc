@@ -8,11 +8,17 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 - If it isn't already on your system, install `rust`, and `cargo`. On \*nix based systems this should be as simple as installing it from your package manager.
 
-- Obtain the sources. You can either do this by cloning the repository using `git` or downloading an archive of the repository.
+- Obtain the sources. You can either do this by cloning the repository using `git` or downloading an archive of the repository.    
+      
+  Cloning using HTTPS:      
+      
+      git clone https://github.com/Bond-009/cmus-discord-rpc 
+      
+  Cloning using `ssh`:
 
-      git clone https://github.com/Bond-009/cmus-discord-rpc
+      git clone git@github.com:Bond-009/cmus-discord-rpc.git
 
-  or alternatively:
+  Downloading an archive using `wget`:
 
        wget https://github.com/Bond-009/cmus-discord-rpc/archive/master.zip
 
