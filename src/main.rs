@@ -108,7 +108,7 @@ fn get_socket_path() -> String
         Ok(v) => v,
         Err(_) => env::var("HOME").unwrap() + "/.config"
     } + "/cmus";
- 
+
     cmus_config_dir + "/socket"
 }
 
