@@ -1,15 +1,14 @@
-use std::{
-    env,
-    io::{BufRead, BufReader,Error, ErrorKind, Write},
-    os::unix::net::UnixStream,
-    time::{Duration, SystemTime, UNIX_EPOCH},
-    thread
-};
+use std::env;
+use std::fmt::{self, Debug, Display, Formatter};
+use std::io::{BufRead, BufReader, Write};
+use std::os::unix::net::UnixStream;
+use std::str::FromStr;
+use std::thread;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use discord_rpc_client::{
-    Client,
-    models::Activity
-};
+use discord_rpc_client::Client;
+use discord_rpc_client::models::Activity;
+
 use env_logger;
 use log::{debug, info};
 use regex::Regex;
@@ -19,6 +18,28 @@ enum Status {
     Playing,
     Paused,
     Stopped
+}
+
+impl Display for Status {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+#[derive(Debug)]
+struct ParseStatusError;
+
+impl FromStr for Status {
+    type Err = ParseStatusError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "playing" => Ok(Status::Playing),
+            "paused" => Ok(Status::Paused),
+            "stopped" => Ok(Status::Stopped),
+            _ => Err(ParseStatusError)
+        }
+    }
 }
 
 fn main() {
@@ -48,10 +69,9 @@ fn main() {
         while reader.read_line(&mut output).unwrap() != 1 {};
         debug!("Received\n{}", output);
 
-        let status = get_status(get_value(&output, "status").unwrap()).unwrap();
-
+        let status = get_value(&output, "status").unwrap().parse::<Status>().unwrap();
         let mut ac = Activity::new()
-                        .details(format!("{:?}", status));
+                        .details(status.to_string());
         if status != Status::Stopped {
             let artist = get_value(&output, "tag artist");
             let title = get_value(&output, "tag title");
@@ -116,13 +136,4 @@ fn get_value<'t>(input: &'t str, key: &str) -> Option<&'t str> {
     let re = Regex::new(&format!("(?m)^{} (.+)$", key)).unwrap();
 
     Some(re.captures(input)?.get(1)?.as_str())
-}
-
-fn get_status(input: &str) -> Result<Status, Error> {
-    match input {
-        "playing" => Ok(Status::Playing),
-        "paused" => Ok(Status::Paused),
-        "stopped" => Ok(Status::Stopped),
-        _ => Err(Error::new(ErrorKind::Other, "oh no!"))
-    }
 }
