@@ -6,7 +6,7 @@ Discord Rich Presence integration for the C* Music Player (`cmus`).
 
 ## Installing
 
-- If it isn't already on your system, install `rust`, and `cargo`. On \*nix based systems this should be as simple as installing it from your package manager.
+- If it isn't already on your system, install `rust`, and `cargo`. You should do this through `rustup` by installing it with your package manager or from [rustup.rs](https://rustup.rs).
 
 - Obtain the sources. You can either do this by cloning the repository using `git` or downloading an archive of the repository.
 
