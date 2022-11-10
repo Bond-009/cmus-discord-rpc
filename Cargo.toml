@@ -13,9 +13,7 @@ opt-level = 3
 panic = "abort"
 
 [dependencies]
+discord-presence = "^0.5"
 env_logger = "^0.9"
 log = "^0.4"
-regex = "^1.1"
-
-[dependencies.discord-rpc-client]
-git = "https://gitlab.com/Bond_009/discord-rpc-client.rs.git"
+regex = "^1.7"

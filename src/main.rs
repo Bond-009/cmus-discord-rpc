@@ -1,3 +1,4 @@
+use std::cmp;
 use std::env;
 use std::fmt::{self, Debug, Display, Formatter};
 use std::io::{BufRead, BufReader, Write};
@@ -6,12 +7,15 @@ use std::str::FromStr;
 use std::thread;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use discord_rpc_client::Client;
-use discord_rpc_client::models::Activity;
+use discord_presence::Client;
+use discord_presence::DiscordError;
+use discord_presence::models::Activity;
 
 use env_logger;
 use log::{debug, info};
 use regex::Regex;
+
+const RATE_LIMIT: Duration = Duration::from_secs(15);
 
 #[derive(PartialEq, Debug)]
 enum Status {
@@ -47,13 +51,15 @@ fn main() {
 
     info!("Starting cmus-discord-rpc...");
 
+    let mut drpc = Client::new(431179120836214795);
+    _ = drpc.start();
+
     let socket_path = get_socket_path();
     debug!("Using cmus socket {}", socket_path);
     let mut stream = get_unix_stream(&socket_path);
-    let mut drpc = Client::new(431179120836214795);
-    drpc.start();
 
     let mut output = String::new();
+    let mut fails = 0;
 
     loop {
         if stream.write_all(b"status\n").is_err() {
@@ -96,9 +102,23 @@ fn main() {
             }
         }
 
-        drpc.set_activity(|_| ac).expect("Failed to set presence");
-
-        thread::sleep(Duration::from_secs(15));
+        match drpc.set_activity(|_| ac) {
+            Ok(_) => {
+                info!("Successfully updated activity");
+                thread::sleep(RATE_LIMIT);
+                fails = 0;
+            }
+            Err(DiscordError::NotStarted) => {
+                let timeout = cmp::min(Duration::from_millis(500 << fails), RATE_LIMIT);
+                info!("Discord client isn't ready, waiting {}ms", timeout.as_millis());
+                thread::sleep(timeout);
+                fails += 1;
+                continue;
+            },
+            v => {
+                v.expect("Failed to set activity");
+            }
+        }
     }
 }
 
