@@ -4,16 +4,15 @@ version = "0.2.0"
 authors = ["Bond_009 <bond.009@outlook.com>"]
 keywords = ["discord", "rpc", "cmus"]
 repository = "https://github.com/Bond-009/cmus-discord-rpc"
-edition = "2018"
+edition = "2021"
 
 [profile.release]
-debug = false
+codegen-units = 1
 lto = true
-opt-level = 3
 panic = "abort"
 
 [dependencies]
-env_logger = "^0.9"
+env_logger = "^0.10"
 log = "^0.4"
 regex = "^1.7"
 
