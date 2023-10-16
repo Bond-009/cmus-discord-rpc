@@ -2,6 +2,7 @@
 name = "cmus-discord-rpc"
 version = "0.2.0"
 authors = ["Bond_009 <bond.009@outlook.com>"]
+description = "Displays the currently playing song from cmus in Discord using Rich Presence"
 keywords = ["discord", "rpc", "cmus"]
 repository = "https://github.com/Bond-009/cmus-discord-rpc"
 edition = "2021"
@@ -12,9 +13,7 @@ lto = true
 panic = "abort"
 
 [dependencies]
+discord-rpc-client = "0.4"
 env_logger = "^0.10"
 log = "^0.4"
-regex = "^1.7"
-
-[dependencies.discord-rpc-client]
-git = "https://gitlab.com/Bond_009/discord-rpc-client.rs.git"
+regex = "^1.10"
