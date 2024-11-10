@@ -1,3 +1,4 @@
+use std::cell::LazyCell;
 use std::env;
 use std::fmt::{self, Debug, Display, Formatter};
 use std::io::{BufRead, BufReader, Write};
@@ -9,7 +10,6 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use discord_rpc_client::Client;
 use discord_rpc_client::models::Activity;
 
-use env_logger;
 use log::{debug, info};
 use regex::Regex;
 
@@ -54,6 +54,7 @@ fn main() {
     drpc.start();
 
     let mut output = String::new();
+    let file_r = LazyCell::new(|| Regex::new(r"(?m)^file .+/(.+)\..+\n").unwrap());
 
     loop {
         if stream.write_all(b"status\n").is_err() {
@@ -78,7 +79,6 @@ fn main() {
 
             if artist.is_none() || title.is_none() {
                 // Capture filename
-                let file_r = Regex::new(r"(?m)^file .+/(.+)\..+\n").unwrap();
                 match file_r.captures(&output) {
                     Some(v) => ac = ac.state(v.get(1).unwrap().as_str()),
                     None => ac = ac.state("")
