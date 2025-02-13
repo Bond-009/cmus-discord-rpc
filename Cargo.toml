@@ -6,6 +6,7 @@ description = "Displays the currently playing song from cmus in Discord using Ri
 keywords = ["discord", "rpc", "cmus"]
 repository = "https://github.com/Bond-009/cmus-discord-rpc"
 edition = "2021"
+license = "GPL-3.0-only"
 
 [profile.release]
 codegen-units = 1
