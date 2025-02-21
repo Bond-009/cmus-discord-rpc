@@ -5,7 +5,7 @@ authors = ["Bond_009 <bond.009@outlook.com>"]
 description = "Displays the currently playing song from cmus in Discord using Rich Presence"
 keywords = ["discord", "rpc", "cmus"]
 repository = "https://github.com/Bond-009/cmus-discord-rpc"
-edition = "2021"
+edition = "2024"
 license = "GPL-3.0-only"
 
 [profile.release]
